@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
+
+"""
+Script Name: get_logicmonitor_devices.py
+Author: [Your Name]
+Description:
+    This script connects to the LogicMonitor REST API using credentials read from
+    a JSON file (`credentials.json`) and verifies API connection.
+    It uses the official `logicmonitor_sdk` Python package.
+
+Requirements:
+    - logicmonitor_sdk (install via `pip install logicmonitor-sdk`)
+    - A `credentials.json` file in the same directory with the following structure:
+        {
+            "access_id": "your-access-id",
+            "access_key": "your-access-key",
+            "company": "your-account-subdomain"
+        }
+"""
+
 import logicmonitor_sdk
 from logicmonitor_sdk.rest import ApiException
 from pprint import pprint
