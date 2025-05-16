@@ -103,3 +103,67 @@ These tools are designed to streamline LogicMonitor maintenance workflows, reduc
 
 
 
+Installing Python and logicmonitor-sdk on Windows
+Step 1: Install Python on Windows
+Go to the official Python download page:
+https://www.python.org/downloads/windows/
+
+Download the latest Python installer for Windows.
+
+Important: During installation, check the box that says:
+✅ Add Python to PATH
+
+Complete the installation and verify it:
+
+Open PowerShell or Command Prompt and run:
+
+powershell
+Copy
+Edit
+python --version
+You should see output like:
+
+nginx
+Copy
+Edit
+Python 3.x.x
+Step 2: Install the logicmonitor-sdk Python Module
+Once Python is installed, use pip to install the LogicMonitor SDK:
+
+powershell
+Copy
+Edit
+pip install logicmonitor-sdk==3.*
+✅ This installs version 3 of the official LogicMonitor SDK, which supports newer API versions.
+
+To verify the installation:
+
+powershell
+Copy
+Edit
+pip show logicmonitor-sdk
+You should see metadata about the installed SDK package.
+
+Depending on the specific script you're using from the py/ folder, you may need to install additional Python modules such as pandas, requests, or others.
+
+If a script throws an error like ModuleNotFoundError, it means that a required library isn't installed.
+
+✅ How to Install Additional Modules
+The installation process is always the same using pip. For example:
+
+powershell
+Copy
+Edit
+pip install pandas
+You can install multiple packages at once:
+
+powershell
+Copy
+Edit
+pip install pandas requests openpyxl
+Or install everything listed in a requirements.txt file (if provided):
+
+powershell
+Copy
+Edit
+pip install -r requirements.txt
