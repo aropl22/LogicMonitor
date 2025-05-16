@@ -1,0 +1,103 @@
+Repository Structure
+This repository is organized into two main folders based on script type:
+
+bash
+Copy
+Edit
+.
+├── ps/      # PowerShell scripts
+├── py/      # Python scripts
+├── README.md
+└── sdt_params.json  # Example configuration file
+🔹 ps/ – PowerShell Scripts
+Contains PowerShell scripts used for interacting with the LogicMonitor API, including scheduling downtime (SDT). These scripts rely on the Logic.Monitor module and may use a JSON file for parameters.
+
+Example: build-sdt.ps1
+
+🔹 py/ – Python Scripts
+Includes optional helper scripts written in Python for tasks such as data manipulation, file preparation, or integration with other tools.
+
+Example: prepare-devices.py
+
+Organizing scripts this way keeps language-specific logic cleanly separated and easier to maintain.
+Let me know if you'd like to include example content from each folder.
+
+
+Getting Started
+✅ Prerequisites
+To use the PowerShell script in this repository, you'll need:
+
+Windows system
+
+Python (optional, if you're using supporting Python scripts)
+
+PowerShell 5.1+ or PowerShell Core 7+
+
+Internet connection (to install dependencies)
+
+🐍 Installing Python on Windows
+If you're running any supporting Python scripts (optional), follow these steps:
+
+Download Python from the official website:
+https://www.python.org/downloads/windows/
+
+Run the installer. Be sure to check the box that says:
+✅ Add Python to PATH
+
+Once installed, verify it by opening PowerShell and running:
+
+powershell
+Copy
+Edit
+python --version
+📦 Installing LogicMonitor PowerShell Module
+To use the LogicMonitor API via PowerShell, you’ll need the Logic.Monitor module.
+
+Open PowerShell as Administrator
+
+Run the following command to install the module from the PowerShell Gallery:
+
+powershell
+Copy
+Edit
+Install-Module -Name Logic.Monitor -Scope CurrentUser -Force
+If prompted about an untrusted repository, choose Y to confirm.
+
+Once installed, verify the module:
+
+powershell
+Copy
+Edit
+Get-Command -Module Logic.Monitor
+📁 Next Steps
+After installation:
+
+Clone or download this repository
+
+Ensure your JSON parameter file and CSV file are in place
+
+Open and run the script using PowerShell:
+
+powershell
+Copy
+Edit
+.\build-sdt.ps1
+Let me know if you'd like me to add authentication instructions for LogicMonitor or how to structure the JSON/CSV files.
+
+
+
+
+
+
+
+You said:
+write something about structure that files are in ps and py folders
+
+
+ChatGPT said:
+Sure! Here's a section you can add to your README.md under a heading like Repository Structure:
+
+
+
+
+
