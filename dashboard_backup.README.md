@@ -24,6 +24,7 @@ Install the SDK:
 pip install logicmonitor-sdk
 ```
 ## 🚀 Usage
+
 Create a credentials.json file in the same directory as the script with the following format:
 
 ```json
