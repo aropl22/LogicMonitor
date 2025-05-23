@@ -1,6 +1,8 @@
 🕒 LogicMonitor Scheduled Downtime (SDT) Script
 This PowerShell script automates the process of adding Scheduled Downtime (SDT) for LogicMonitor devices listed in a CSV file. Script parameters like comment, start/end time, and file paths are dynamically loaded from a sdt_params.json configuration file.
 
+👉 This project is 
+
 📦 Features
 
 Adds SDTs to LogicMonitor devices from a CSV file
