@@ -3,6 +3,20 @@
 # Do not use in production
 # ==========================
 
+"""
+This script backs up all dashboards from a LogicMonitor account by retrieving
+dashboard groups and their associated dashboards using the LogicMonitor SDK v3.
+Each dashboard's configuration is saved as a JSON file in a timestamped folder
+for versioned backups and auditing.
+
+Requirements:
+- logicmonitor_sdk v3
+- Valid LogicMonitor API credentials
+
+Outputs:
+- JSON files for each dashboard, saved in a uniquely named folder with the current date and time.
+"""
+
 import os
 import json
 from logicmonitor_sdk import LMApi
