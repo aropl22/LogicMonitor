@@ -69,6 +69,40 @@ powershell
 Copy
 Edit
 Get-Command -Module Logic.Monitor
+
+⚠️ Script Execution Policy Issues
+If you encounter errors when running LogicMonitor PowerShell scripts (such as *.ps1 cannot be loaded because running scripts is disabled on this system), it’s likely due to your system’s PowerShell execution policy.
+
+🔍 What’s Happening?
+PowerShell restricts script execution by default for security. The module may fail if scripts are blocked.
+
+✅ Workarounds
+You can either temporarily or permanently adjust the execution policy.
+
+🔹 Temporary (Session-Only, Recommended for Testing)
+powershell
+Copy
+Edit
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+Applies only to the current PowerShell session.
+
+Does not affect other users or future sessions.
+
+🔸 Permanent (All Sessions or Current User)
+powershell
+Copy
+Edit
+# For current user
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Or for all users (requires admin)
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+💡 RemoteSigned allows local scripts to run and blocks unsigned scripts from the internet.
+
+🔐 Security Note
+Only change the execution policy if you trust the scripts and understand the implications. Avoid setting it to Unrestricted or Bypass permanently unless absolutely necessary.
+
+
 📁 Next Steps
 After installation:
 
