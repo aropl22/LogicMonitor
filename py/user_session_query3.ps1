@@ -6,7 +6,8 @@ $output = & "C:\Windows\System32\query.exe" user | Select-Object -Skip 1
 
 foreach ($line in $output) {
     if ($line -match "^\s*(\S+).*\s+(Active|Disc)\s+") {
-        $username = $matches[1]
+        #$username = $matches[1]
+        $username = $matches[1].TrimStart(">")
         $state    = $matches[2]
         if ($state -eq "Active") {
             $users += $username
