@@ -1,0 +1,39 @@
+import com.santaba.agent.groovyapi.win32.WMI
+
+def host = hostProps.get("system.hostname")
+def activeUsers = []
+
+try {
+    // Get all logon sessions of type RemoteInteractive (RDP/Horizon)
+    def sessions = WMI.queryAll(host, "SELECT LogonId, LogonType FROM Win32_LogonSession WHERE LogonType = 10")
+
+    sessions.each { session ->
+        def logonId = session["LogonId"]
+
+        // Map session to account
+        def linkedUsers = WMI.queryAll(host, 
+            "ASSOCIATORS OF {Win32_LogonSession.LogonId='${logonId}'} WHERE AssocClass=Win32_LoggedOnUser Role=Dependent")
+
+        linkedUsers.each { userObj ->
+            def username = userObj["Name"]
+            def domain = userObj["Domain"]
+            if (username && !activeUsers.contains(username)) {
+                activeUsers << "${domain}\\${username}"
+            }
+        }
+    }
+
+} catch (Exception e) {
+    println "Error querying WMI: ${e.message}"
+}
+
+// Join users into a string
+def userString = activeUsers.join(',')
+
+// Print for debugging/logging
+println "ActiveHorizonUsers: ${userString}"
+
+// Store in LogicMonitor system property
+hostProps.set("ActiveHorizonUsers", userString)
+
+return 0
