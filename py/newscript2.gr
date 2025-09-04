@@ -1,0 +1,30 @@
+import com.santaba.agent.groovyapi.win32.WMI
+
+def host = hostProps.get("system.hostname")
+def activeUsers = []
+
+def output = WMI.exec(host, "cmd /c query user")
+
+output.eachLine { line ->
+    if (!line.toLowerCase().contains("username")) {
+        def parts = line.trim().split(/\s+/)
+        if (parts.size() >= 3) {
+            def username = parts[0]
+            def state = parts[2]
+            if (state.equalsIgnoreCase("Active")) {
+                activeUsers << username
+            }
+        }
+    }
+}
+
+// Remove duplicates and join
+def userString = activeUsers.unique().join(',')
+
+// Print for debugging
+println "ActiveHorizonUsers: ${userString}"
+
+// Store in system property
+hostProps.set("ActiveHorizonUsers", userString)
+
+return 0
