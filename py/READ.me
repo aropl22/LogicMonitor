@@ -1,0 +1,60 @@
+README – Active User Logging Scripts
+Overview
+
+These PowerShell scripts are designed to capture active user sessions on Windows hosts and log them to a file with timestamps. Each script uses a different method to retrieve usernames:
+
+Query Script – uses the built-in query user command.
+
+WMI Script – uses Windows Management Instrumentation (Win32_ComputerSystem).
+
+WMI Script (Domain Removed) – same as WMI script, but strips the domain prefix from usernames.
+
+These scripts can be scheduled to run periodically via Task Scheduler and integrated with monitoring tools such as LogicMonitor.
+
+1. Query Script
+
+Description:
+Uses query user to retrieve all active sessions. Works well for RDP/Horizon sessions but may require the executable to be present (C:\Windows\System32\query.exe).
+
+2. WMI Script
+
+Description:
+Queries WMI Win32_ComputerSystem for the currently logged-on console user.
+
+Does not require admin privileges for basic console session.
+
+May not capture RDP/Horizon sessions with read-only rights.
+
+
+3. WMI Script (Domain Removed)
+
+Description:
+Same as the WMI script, but removes the domain prefix (DOMAIN\username) to log only the username.
+
+
+Example Log Output:
+
+2025-09-04 16:10:01 : johndoe
+
+Usage Instructions
+
+Save the desired script as .ps1 (e.g., QueryUsers.ps1).
+
+Create the log folder if it doesn’t exist (C:\Logs\).
+
+Run manually:
+
+powershell.exe -ExecutionPolicy Bypass -File "C:\Scripts\QueryUsers.ps1"
+
+
+Or schedule via Task Scheduler to run periodically.
+
+Notes
+
+Query Script is preferred for RDP/Horizon sessions.
+
+WMI Scripts are limited by privileges; may only see console user.
+
+Remove domain from usernames if you want cleaner logs.
+
+Always test manually first to ensure the script captures users correctly on your environment.
