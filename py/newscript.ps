@@ -1,0 +1,11 @@
+# Get active users (Horizon / RDP / console)
+$users = query user | ForEach-Object {
+    $parts = ($_ -split '\s+') 
+    if ($parts.Count -ge 3 -and $parts[2] -eq 'Active') { $parts[0] }
+}
+
+# Remove duplicates
+$uniqueUsers = $users | Sort-Object -Unique
+
+# Output for LogicMonitor as a system property
+Write-Output "auto.property.ActiveHorizonUsers=$($uniqueUsers -join ',')"
