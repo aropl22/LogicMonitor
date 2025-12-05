@@ -1,0 +1,29 @@
+report = {
+    "groups": {
+        "GroupA": {
+            "dashboards": {
+                101: {
+                    "name": "Network Overview",
+                    "widget_tokens": ["abc123", "xyz789"]
+                },
+                102: {
+                    "name": "Empty Dashboard",
+                    "widget_tokens": None
+                }
+            }
+        },
+        "GroupB": {
+            "dashboards": {
+                201: {
+                    "name": "Server Health",
+                    "widget_tokens": ["token55"]
+                }
+            }
+        }
+    },
+    "widgets": {
+        "abc123": {"name": "CPU Widget", "type": "timeseries"},
+        "xyz789": {"name": "Memory Widget"},  # Broken (missing type)
+        "token55": {"name": "Disk Widget", "type": "gauge"},
+    }
+}
