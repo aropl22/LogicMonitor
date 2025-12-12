@@ -63,6 +63,9 @@ def is_widget_broken(api_instance, w_id):
 
         throttle(headerinfo=headerinfo)
 
+        if w_id == "2716":
+            print(f"Widget ID {w_id} full datahttp response:\n {widget_data_http}")
+
         # Graphs / tables / Pie charts
         if hasattr(widget_data, "items"):
             if not widget_data.items:
@@ -253,6 +256,8 @@ def main():
                     if w_id == "19":
                         print(f"Widget ID {w_id} full http response:\n {widget_detail_http}")
                     '''
+                    if w_id == "2716":
+                        print(f"Widget ID {w_id} full http response:\n {widget_detail_http}")
                     #END DEBUG code
 
                     #check if widget is HTML type
@@ -276,8 +281,9 @@ def main():
                         "widget_type": widget_type_field,
                         "widget_error": message,
                     }
-                    print(f" Testing {group_name}/{dashboard_name}/{widget_name} : type {widget_type_field}")
-#                   manual pause
+                    #print(f" Testing {group_name}/{dashboard_name}/{widget_name} : type {widget_type_field}")
+                    #                   
+                    # manual pause
                     #input("Widget details above ^^^ press enter to continue")
 
                 #TESTING - only first dashboard from each group

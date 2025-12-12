@@ -1,0 +1,118 @@
+# Dashboard Scanner
+
+**Script:** `dashboard-scanner`  
+**Author:** SA  
+**Version:** 1.0  
+**Date:** 2025-12-12  
+
+---
+
+## Overview
+
+The **dashboard-scanner** is a Python utility for auditing dashboards in a **LogicMonitor** account.  
+It iterates through all dashboard groups, dashboards, and widgets, detecting broken or missing widget data, such as empty tables, missing graph data, or missing numeric values.  
+
+The script is designed to handle large LogicMonitor accounts and API rate limits gracefully.  
+
+---
+
+## Features
+
+- Enumerates all **dashboard groups**, **dashboards**, and **widgets**.  
+- Detects broken or incomplete widgets based on **type-specific checks**:  
+  - GraphPlot / CustomGraph  
+  - BigNumber / SingleValue  
+  - PieChart  
+  - Gauge  
+  - DeviceSLA / WebsiteSLA  
+  - Dynamic tables and generic tables  
+- Identifies dashboards **without widget tokens**.  
+- Skips HTML and Alert widgets from broken-status checks.  
+- Tracks **API rate limits** and throttles requests automatically to avoid exceeding quotas.  
+- Outputs a **CSV report** summarizing dashboards, widgets, and their statuses.  
+
+---
+
+## Requirements
+
+- Python 3.x  
+- `logicmonitor-sdk` v3  
+- Valid **LogicMonitor API credentials** (`credentials.json`)  
+
+---
+
+## Installation
+
+1. Clone the repository or download the script.  
+2. Install dependencies:
+
+```bash
+pip install logicmonitor-sdk
+
+'''bash
+
+3. Place your LogicMonitor credentials in a JSON file named credentials.json.
+
+Usage:
+
+Run the script directly:
+
+python dashboard-scanner.py
+
+
+The script will:
+
+Authenticate to the LogicMonitor API.
+
+Enumerate all dashboard groups and dashboards.
+
+Check each widget for errors or missing data.
+
+Respect API rate limits to prevent throttling issues.
+
+Save a CSV report in a folder named like report_YYYY-MM-DD_HH-MM-SS.
+
+Output:
+
+The CSV report (dashboards.csv) contains the following columns:
+
+full_path — full path of the dashboard
+
+group_name — dashboard group name
+
+group_id — dashboard group ID
+
+dashboard_name — dashboard name
+
+dashboard_id — dashboard ID
+
+dashboard_tokens — YES/NO if dashboard has tokens
+
+tokens_strings — token values (comma-separated)
+
+widget_name — widget name
+
+widget_id — widget ID
+
+widget_type — type of widget
+
+broken_widget — True/False if widget is broken
+
+widget_error — detailed error message if broken
+
+Notes:
+
+Widgets returning "No Data" are marked as Skipped.
+
+HTML and Alert widgets are always skipped.
+
+API rate limit information is displayed live in the console.
+
+The script is safe for auditing and does not modify dashboards.
+
+Example Report:
+```bash
+full_path,group_name,group_id,dashboard_name,dashboard_id,dashboard_tokens,tokens_strings,widget_name,widget_id,widget_type,broken_widget,widget_error
+/Network/Overview,Network,101,Main Dashboard,201,YES,token1,CPU Utilization,301,GraphPlotWidget,False,OK
+/Network/Overview,Network,101,Main Dashboard,201,YES,token1,Memory Usage,302,GraphPlotWidget,True,Graph has no datapoints in any line
+```bash
