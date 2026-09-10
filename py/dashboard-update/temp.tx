@@ -1,0 +1,12 @@
+I just created a Python script that downloads the LogicMonitor default dashboards from the public GitHub repository and preserves the repository folder structure locally.
+
+As I’m working on the new design, I think we should change the script slightly. Instead of downloading everything first and then determining which dashboards are recent, I think it would be more efficient to:
+
+1. Walk the GitHub repository.
+2. Find the dashboard files.
+3. Check the last GitHub commit date for each file.
+4. Select only the dashboards modified within the last 3 months.
+5. Download only those files.
+6. Preserve their original GitHub folder structure.
+
+This should reduce the amount of data we download and make the process more efficient as we move toward comparing the GitHub dashboards with the ones in LogicMonitor.
