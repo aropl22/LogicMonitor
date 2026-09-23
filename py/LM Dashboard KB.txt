@@ -1,0 +1,391 @@
+# LogicMonitor Dashboard Update Script
+
+## Overview
+
+The LogicMonitor Dashboard Update Script creates and updates LogicMonitor dashboards using dashboard JSON files stored locally.
+
+The script processes the local `lm-dashboards` directory and maintains the dashboard folder structure in LogicMonitor.
+
+Dashboard JSON files are downloaded separately using the GitHub Dashboard Download Script. The Dashboard Update Script does not connect to GitHub or download dashboard files.
+
+Before making any changes, the script requires confirmation that a backup has already been created. The backup is performed separately and is not created by this script.
+
+---
+
+## Features
+
+* Creates missing LogicMonitor dashboard groups.
+* Creates missing LogicMonitor dashboards.
+* Updates existing dashboards.
+* Maintains the local dashboard folder hierarchy in LogicMonitor.
+* Uses the LogicMonitor Python SDK.
+* Does not delete dashboards.
+* Requires backup confirmation before making changes.
+* Provides timestamped log files.
+* Handles LogicMonitor API rate limits.
+* Uses separate configuration and credential settings for the LogicMonitor environment.
+
+---
+
+## Requirements
+
+* Python 3.x
+* LogicMonitor Python SDK
+* LogicMonitor API credentials
+* Access to the target LogicMonitor account
+* Dashboard JSON files in the `lm-dashboards` directory
+
+---
+
+## Directory Structure
+
+The project uses the following general structure:
+
+```text
+project/
+├── dashboard_update.py
+├── updates.py
+├── map_data.py
+├── folder_trees.py
+├── script_logging.py
+├── <credentials/configuration file>
+├── lm-dashboards/
+│   ├── Network/
+│   │   └── ...
+│   ├── LogicMonitor/
+│   │   └── ...
+│   └── ...
+└── logs/
+    └── ...
+```
+
+The exact filenames of the Python modules and credential/configuration file may vary depending on the implementation.
+
+---
+
+## Dashboard Download
+
+Dashboard JSON files are downloaded separately by the GitHub Dashboard Download Script.
+
+The Dashboard Update Script does not download files from GitHub.
+
+The downloaded dashboard files are stored in:
+
+```text
+lm-dashboards/
+```
+
+The folder structure under `lm-dashboards` is used to determine the corresponding LogicMonitor dashboard group hierarchy.
+
+---
+
+## LogicMonitor Dashboard Group
+
+The script imports dashboards under the following LogicMonitor dashboard group:
+
+```text
+LogicMonitor Dashboards imported
+```
+
+The local folder structure is mapped to the corresponding LogicMonitor dashboard groups.
+
+For example:
+
+```text
+lm-dashboards/
+└── Network/
+    ├── Cisco/
+    │   ├── Dashboard1.json
+    │   └── Dashboard2.json
+    └── WAN/
+        └── Dashboard3.json
+```
+
+can be represented in LogicMonitor as:
+
+```text
+LogicMonitor Dashboards imported
+└── Network
+    ├── Cisco
+    │   ├── Dashboard1
+    │   └── Dashboard2
+    └── WAN
+        └── Dashboard3
+```
+
+---
+
+## Backup Confirmation
+
+The Dashboard Update Script does not create a dashboard backup.
+
+A backup must be created separately before running the update process.
+
+The script prompts the user to confirm that a backup has been completed.
+
+The update process continues only after the user confirms the backup.
+
+This provides an additional safeguard before making changes to LogicMonitor dashboards.
+
+---
+
+## Configuration and Credentials
+
+The configuration and LogicMonitor API credential information is stored in a file located in the project root directory.
+
+There is no separate `config` directory.
+
+Example:
+
+```text
+project/
+├── dashboard_update.py
+├── updates.py
+├── map_data.py
+├── folder_trees.py
+├── script_logging.py
+├── credentials.py
+└── ...
+```
+
+The credential file should contain the information required for the script to connect to the appropriate LogicMonitor environment.
+
+Credentials should not be committed to source control.
+
+If the project is stored in Git, add the credential file to `.gitignore`.
+
+---
+
+## Dashboard Processing
+
+The script scans the local `lm-dashboards` directory and processes the dashboard JSON files.
+
+For each dashboard, the script:
+
+1. Reads the dashboard JSON file.
+2. Determines the corresponding LogicMonitor dashboard group.
+3. Checks whether the dashboard group exists.
+4. Creates missing groups when required.
+5. Checks whether the dashboard already exists.
+6. Creates new dashboards.
+7. Updates existing dashboards when changes are detected.
+
+---
+
+## Create and Update Behavior
+
+The script supports both dashboard creation and updates.
+
+### New Dashboard
+
+If a dashboard does not exist in LogicMonitor, the script creates it.
+
+### Existing Dashboard
+
+If the dashboard already exists, the script updates it using the local JSON definition.
+
+### Existing Dashboard Not in Local Files
+
+Dashboards that already exist in LogicMonitor but are not present in the local `lm-dashboards` directory are not deleted.
+
+The script does not perform automatic dashboard deletion.
+
+---
+
+## Dashboard Deletion
+
+The script does **not** delete dashboards.
+
+This allows dashboards that are not currently included in the local repository to remain in LogicMonitor.
+
+Any dashboard deletion must be performed separately.
+
+---
+
+## Logging
+
+The `script_logging.py` helper module provides centralized logging functionality for the script.
+
+The logging functionality records script activity, status messages, warnings, errors, and processing results.
+
+Log files are stored in the:
+
+```text
+logs/
+```
+
+directory.
+
+Log files use timestamps to make individual script executions easy to identify.
+
+---
+
+## Helper Modules
+
+Several Python modules provide supporting functionality for the main Dashboard Update Script.
+
+| Component           | Purpose                                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------------------- |
+| `updates.py`        | Contains functions for creating and updating LogicMonitor dashboard groups and dashboards.     |
+| `map_data.py`       | Provides dashboard and folder mapping data used during processing.                             |
+| `folder_trees.py`   | Handles dashboard folder/group hierarchy and tree-related operations.                          |
+| `script_logging.py` | Provides centralized logging functionality for script activity, warnings, errors, and results. |
+
+These modules support the main `dashboard_update.py` script and are not intended to be run independently.
+
+---
+
+## API Rate Limiting
+
+LogicMonitor API requests are subject to API rate limits.
+
+The script includes handling for API rate-limit responses and waits before retrying requests when necessary.
+
+The script is designed to work within the LogicMonitor API limit of:
+
+```text
+500 requests per 60 seconds
+```
+
+Rate-limit handling helps prevent the update process from failing when processing a large number of dashboards.
+
+---
+
+## Running the Script
+
+Run the Dashboard Update Script from the project root directory.
+
+Example:
+
+```bash
+python dashboard_update.py
+```
+
+The script will:
+
+1. Load the configuration and credentials.
+2. Validate the local dashboard directory.
+3. Prompt for backup confirmation.
+4. Process the dashboard folder structure.
+5. Create missing dashboard groups.
+6. Create new dashboards.
+7. Update existing dashboards.
+8. Record the results in the log file.
+
+---
+
+## Recommended Workflow
+
+The recommended workflow is:
+
+### 1. Download Dashboards
+
+Run the GitHub Dashboard Download Script to download the required dashboard JSON files.
+
+The files are stored under:
+
+```text
+lm-dashboards/
+```
+
+### 2. Create a Backup
+
+Run the separate Dashboard Backup process to create a backup of the existing LogicMonitor dashboards.
+
+### 3. Run the Dashboard Update Script
+
+Run:
+
+```bash
+python dashboard_update.py
+```
+
+Confirm the backup when prompted.
+
+### 4. Review the Results
+
+Review the timestamped log file under:
+
+```text
+logs/
+```
+
+Verify that the expected dashboard groups and dashboards were created or updated.
+
+---
+
+## Troubleshooting
+
+### Script Cannot Connect to LogicMonitor
+
+Verify that:
+
+* The credential/configuration file exists in the project root.
+* The API credentials are correct.
+* The API user has the required permissions.
+* The correct LogicMonitor environment is configured.
+
+### Dashboard JSON Files Are Not Found
+
+Verify that the dashboard files exist under:
+
+```text
+lm-dashboards/
+```
+
+Also verify that the expected folder structure is present.
+
+### Dashboard Group Is Not Created
+
+Check the log file for API errors or permission issues.
+
+Verify that the API user has permission to create dashboard groups.
+
+### Dashboard Is Not Updated
+
+Check the log file for the specific dashboard and review any API error returned by LogicMonitor.
+
+---
+
+## Security
+
+The credential/configuration file contains sensitive information and should be protected.
+
+Do not commit API credentials to GitHub or other public repositories.
+
+Recommended practices include:
+
+* Store credentials only in the root credential/configuration file.
+* Add the credential file to `.gitignore`.
+* Use a LogicMonitor API user with only the permissions required by the script.
+* Do not include credentials in log files.
+* Do not share credential files with the source code.
+
+---
+
+## Components
+
+| Component                       | Purpose                                                                                                  |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `dashboard_update.py`           | Main script that processes local dashboard JSON files and creates or updates dashboards in LogicMonitor. |
+| `updates.py`                    | Contains functions for creating and updating LogicMonitor dashboard groups and dashboards.               |
+| `map_data.py`                   | Provides dashboard and folder mapping data used during processing.                                       |
+| `folder_trees.py`               | Handles dashboard folder/group hierarchy and tree-related operations.                                    |
+| `script_logging.py`             | Provides centralized logging functionality for script activity, warnings, errors, and results.           |
+| `lm-dashboards/`                | Contains the local dashboard JSON files used by the update process.                                      |
+| `logs/`                         | Contains timestamped execution logs.                                                                     |
+| `Credential/configuration file` | Contains the LogicMonitor connection and authentication configuration used by the script.                |
+
+---
+
+## Summary
+
+The LogicMonitor Dashboard Update Script provides a controlled way to create and update LogicMonitor dashboards from locally stored JSON files.
+
+The process separates dashboard downloading, backup, and updating into independent components:
+
+* **GitHub Dashboard Download Script** — Downloads dashboard JSON files.
+* **Dashboard Backup Process** — Creates a backup before changes are made.
+* **Dashboard Update Script** — Creates and updates dashboards from the local files.
+
+The Dashboard Update Script does not download dashboards from GitHub and does not delete existing LogicMonitor dashboards.
