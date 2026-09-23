@@ -1,3 +1,14 @@
+LogicMonitor Dashboard Update Script
+Introduction
+
+The LogicMonitor Dashboard Update Script provides a controlled and repeatable way to create and update LogicMonitor dashboards using dashboard JSON files stored locally.
+
+The process separates dashboard downloading, backup, and updating into independent steps. Dashboard JSON files are downloaded separately from the LogicMonitor dashboards GitHub repository and stored in the local lm-dashboards directory. Before any changes are made in LogicMonitor, a separate dashboard backup must be completed and confirmed by the user.
+
+The Dashboard Update Script then processes the local dashboard files, maintains the corresponding dashboard group hierarchy, creates missing dashboard groups and dashboards, and updates existing dashboards as needed. The script does not delete existing LogicMonitor dashboards.
+
+This KB article documents the script components, directory structure, configuration, backup requirements, dashboard processing workflow, logging, API rate-limit handling, and recommended procedures for safely running dashboard updates.
+
 # LogicMonitor Dashboard Update Script
 
 ## Overview
