@@ -1,0 +1,109 @@
+import com.santaba.agent.groovyapi.http.*
+import groovy.json.JsonSlurper
+
+//
+// GitHub Status API
+//
+def apiHost = "www.githubstatus.com"
+def apiPath = "/api/v2/status.json"
+
+//
+// Proxy Configuration
+// Resource properties take precedence.
+// Collector settings are used as fallback.
+//
+def proxyHost = hostProps.get("proxy.host") ?: Settings.getSetting("proxy.host")
+def proxyPort = hostProps.get("proxy.port") ?: Settings.getSetting("proxy.port")
+
+//
+// Create HTTPS client
+//
+def client = HTTP.open(apiHost, 443, true)
+
+//
+// Configure proxy if available
+//
+if (proxyHost && proxyPort) {
+    client.setHTTPProxy(proxyHost, proxyPort.toInteger())
+}
+
+//
+// Request headers
+//
+def headers = [
+    "Accept"    : "application/json",
+    "User-Agent": "LogicMonitor"
+]
+
+//
+// Make API request
+//
+def response = client.get(apiPath, headers)
+
+//
+// Check HTTP status
+//
+def httpStatus = client.getStatusCode()
+
+println "github.http.status=${httpStatus}"
+
+if (httpStatus != 200) {
+    println "github.status=0"
+    println "github.status.indicator=-1"
+    client.close()
+    return 1
+}
+
+//
+// Parse JSON response
+//
+def responseBody = client.getResponseBody()
+
+def json = new JsonSlurper().parseText(responseBody)
+
+//
+// GitHub overall status
+//
+def indicator = json.status.indicator
+def description = json.status.description
+
+println "github.status.description=${description}"
+println "github.status.indicator.text=${indicator}"
+
+//
+// Convert GitHub status into a numeric datapoint
+//
+// none     = 0
+// minor    = 1
+// major    = 2
+// critical = 3
+//
+def indicatorValue
+
+switch (indicator) {
+    case "none":
+        indicatorValue = 0
+        break
+
+    case "minor":
+        indicatorValue = 1
+        break
+
+    case "major":
+        indicatorValue = 2
+        break
+
+    case "critical":
+        indicatorValue = 3
+        break
+
+    default:
+        indicatorValue = -1
+        break
+}
+
+println "github.status.indicator=${indicatorValue}"
+
+client.close()
+
+return 0
