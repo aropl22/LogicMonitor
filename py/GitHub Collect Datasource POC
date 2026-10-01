@@ -1,0 +1,39 @@
+import groovy.json.JsonSlurper
+import java.net.URL
+
+def url = new URL("https://www.githubstatus.com/api/v2/summary.json")
+def connection = url.openConnection()
+
+connection.setRequestMethod("GET")
+connection.setConnectTimeout(10000)
+connection.setReadTimeout(10000)
+
+if (connection.responseCode != 200) {
+    println "Status=-1"
+    return
+}
+
+def json = new JsonSlurper().parse(connection.inputStream)
+
+def indicator = json.status.indicator
+
+def status
+
+switch (indicator) {
+    case "none":
+        status = 1
+        break
+    case "minor":
+        status = 2
+        break
+    case "major":
+        status = 3
+        break
+    case "critical":
+        status = 4
+        break
+    default:
+        status = -1
+}
+
+println "Status=${status}"
