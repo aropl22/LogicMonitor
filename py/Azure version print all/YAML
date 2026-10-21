@@ -1,0 +1,6 @@
+- script: python your_script.py
+  displayName: 'Run LogicMonitor Device Audit'
+  env:
+    LM_ACCESS_ID: $(LM_ACCESS_ID)
+    LM_ACCESS_KEY: $(LM_ACCESS_KEY)
+    LM_ACCOUNT: $(LM_ACCOUNT)
